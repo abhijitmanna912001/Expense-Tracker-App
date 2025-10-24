@@ -19,7 +19,6 @@ const Login = () => {
   const handleSubmit = async () => {
     if (!emailRef.current || !passwordRef.current) {
       Alert.alert("Login", "Please fill in all fields.");
-      return;
     }
   };
 
