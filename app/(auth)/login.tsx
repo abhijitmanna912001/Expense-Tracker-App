@@ -79,7 +79,7 @@ const Login = () => {
         </View>
         <View style={styles.footer}>
           <Typography size={15}>Don&apos;t have an account?</Typography>
-          <Pressable onPress={() => router.push("/(auth)/register")}>
+          <Pressable onPress={() => router.navigate("/(auth)/register")}>
             <Typography size={15} fontWeight={"700"} color={colors.primary}>
               Sign up
             </Typography>
