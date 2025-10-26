@@ -1,11 +1,12 @@
-import { StyleSheet, Text, View } from "react-native";
+import ScreenWrapper from "@/components/ScreenWrapper";
 import React from "react";
+import { StyleSheet, Text } from "react-native";
 
 const Statistics = () => {
   return (
-    <View>
+    <ScreenWrapper>
       <Text>Statistics</Text>
-    </View>
+    </ScreenWrapper>
   );
 };
 
