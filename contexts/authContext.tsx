@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import {
@@ -25,14 +26,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const router = useRouter();
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        setUser({
-          uid: firebaseUser?.uid,
-          email: firebaseUser?.email,
-          name: firebaseUser?.displayName,
-        });
-        updateUserData(firebaseUser.uid)
+        await updateUserData(firebaseUser.uid);
         router.replace("/(tabs)");
       } else {
         setUser(null);
@@ -56,43 +52,43 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const register = useCallback(
     async (email: string, password: string, name: string) => {
       try {
-        let response = await createUserWithEmailAndPassword(
+        const response = await createUserWithEmailAndPassword(
           auth,
           email,
           password
         );
-        await setDoc(doc(firestore, "users", response?.user?.uid), {
+
+        await updateProfile(response.user, {
+          displayName: name,
+        });
+
+        await setDoc(doc(firestore, "users", response.user.uid), {
           email,
           name,
-          uid: response?.user?.uid,
+          uid: response.user.uid,
         });
+
         return { success: true };
       } catch (error: any) {
-        let msg = error.message;
-        return { success: false, msg };
+        return { success: false, msg: error.message };
       }
     },
     []
   );
 
   const updateUserData = useCallback(async (uid: string) => {
-    try {
-      const docRef = doc(firestore, "users", uid);
-      const docSnap = await getDoc(docRef);
+    const docRef = doc(firestore, "users", uid);
+    const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        const userData: UserType = {
-          uid: data?.uid,
-          email: data.email || null,
-          name: data.name || null,
-          image: data.image || null,
-        };
-        setUser({ ...userData });
-      }
-    } catch (error: any) {
-      let msg = error.message;
-      console.log("Error: ", msg);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+
+      setUser({
+        uid: data.uid,
+        email: data.email || null,
+        name: data.name || null,
+        image: data.image || null,
+      });
     }
   }, []);
 

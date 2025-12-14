@@ -1,8 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { initializeApp } from "firebase/app";
-import { initializeAuth, getReactNativePersistence } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
 import Constants from "expo-constants";
+import { initializeApp } from "firebase/app";
+import {
+  // @ts-ignore
+  getReactNativePersistence,
+  initializeAuth
+} from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 type ExtraConfig = {
   FIREBASE_API_KEY: string;
