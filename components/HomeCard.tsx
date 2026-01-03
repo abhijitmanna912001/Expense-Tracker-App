@@ -1,15 +1,46 @@
 import { colors, spacingX, spacingY } from "@/constants/theme";
+import { useAuth } from "@/contexts/authContext";
+import useFetchData from "@/hooks/useFetchData";
+import { WalletType } from "@/types";
 import { scale, verticalScale } from "@/utils/styling";
-import React from "react";
-import { ImageBackground, StyleSheet, View } from "react-native";
-import Typography from "./Typography";
+import { orderBy, where } from "firebase/firestore";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
   DotsThreeOutlineIcon,
 } from "phosphor-react-native";
+import React, { useMemo } from "react";
+import { ImageBackground, StyleSheet, View } from "react-native";
+import Typography from "./Typography";
 
 const HomeCard = () => {
+  const { user } = useAuth();
+
+  const constraints = useMemo(
+    () =>
+      user?.uid
+        ? [where("uid", "==", user.uid), orderBy("created", "desc")]
+        : [],
+    [user?.uid]
+  );
+
+  const { data: wallets, loading: walletsLoading } = useFetchData<WalletType>(
+    "wallets",
+    constraints
+  );
+
+  const totals = useMemo(() => {
+    return wallets.reduce(
+      (acc, item) => {
+        acc.balance += Number(item.amount || 0);
+        acc.income += Number(item.totalIncome || 0);
+        acc.expenses += Number(item.totalExpenses || 0);
+        return acc;
+      },
+      { balance: 0, income: 0, expenses: 0 }
+    );
+  }, [wallets]);
+
   return (
     <ImageBackground
       source={require("../assets/images/card.png")}
@@ -29,7 +60,7 @@ const HomeCard = () => {
             />
           </View>
           <Typography color={colors.black} size={30} fontWeight={"bold"}>
-            $2343.23
+            $ {walletsLoading ? "----" : totals.balance.toFixed(2)}
           </Typography>
         </View>
 
@@ -54,7 +85,7 @@ const HomeCard = () => {
 
             <View style={{ alignSelf: "center" }}>
               <Typography size={17} fontWeight={"600"} color={colors.green}>
-                $2343
+                $ {walletsLoading ? "----" : totals.income.toFixed(2)}
               </Typography>
             </View>
           </View>
@@ -77,7 +108,7 @@ const HomeCard = () => {
             </View>
             <View style={{ alignSelf: "center" }}>
               <Typography size={17} fontWeight={"600"} color={colors.rose}>
-                $23434
+                $ {walletsLoading ? "----" : totals.expenses.toFixed(2)}
               </Typography>
             </View>
           </View>

@@ -2,18 +2,26 @@ import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import Typography from "./Typography";
 import { TransactionItemProps } from "@/types";
-import { expenseCategories } from "@/constants/data";
+import { expenseCategories, incomeCategory } from "@/constants/data";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { Timestamp } from "firebase/firestore";
 
 const TransactionItem = ({
   item,
   index,
   handleClick,
 }: TransactionItemProps) => {
-  let category = expenseCategories["utilities"];
+  let category =
+    item?.type === "income"
+      ? incomeCategory
+      : expenseCategories[item?.category!];
   const IconComponent = category.icon;
+
+  const date = (item?.date as Timestamp)
+    ?.toDate()
+    ?.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
 
   return (
     <Animated.View
@@ -39,16 +47,19 @@ const TransactionItem = ({
             color={colors.neutral400}
             textProps={{ numberOfLines: 1 }}
           >
-            Paid Wifi Bill
+            {item.description}
           </Typography>
         </View>
 
         <View style={styles.amountData}>
-          <Typography fontWeight={"500"} color={colors.rose}>
-            - $23
+          <Typography
+            fontWeight={"500"}
+            color={item.type === "income" ? colors.primary : colors.rose}
+          >
+            {`${item?.type === "income" ? "+ $" : "- $"}${item?.amount}`}
           </Typography>
           <Typography size={13} color={colors.neutral400}>
-            29 Dec
+            {date}
           </Typography>
         </View>
       </TouchableOpacity>

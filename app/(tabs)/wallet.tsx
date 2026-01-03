@@ -25,11 +25,10 @@ const Wallet = () => {
     [user?.uid]
   );
 
-  const {
-    data: wallets,
-    loading: walletsLoading,
-    error,
-  } = useFetchData<WalletType>("wallets", constraints);
+  const { data: wallets, loading: walletsLoading } = useFetchData<WalletType>(
+    "wallets",
+    constraints
+  );
 
   // ✅ AUTH LOADING UI (AFTER hooks)
   if (!user) {
