@@ -32,7 +32,7 @@ export type TypoProps = {
   size?: number;
   color?: string;
   fontWeight?: TextStyle["fontWeight"];
-  children: any | null;
+  children?: ReactNode;
   style?: TextStyle;
   textProps?: TextProps;
 };
@@ -168,4 +168,16 @@ export type WalletType = {
   image: any;
   uid?: string;
   created?: Date;
+};
+
+export type paramType = {
+  id: string;
+  type: string;
+  amount: string;
+  category?: string;
+  date: string;
+  description?: string;
+  image?: any;
+  uid?: string;
+  walletId: string;
 };

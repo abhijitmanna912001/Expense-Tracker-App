@@ -6,12 +6,12 @@ import Typography from "@/components/Typography";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import { useAuth } from "@/contexts/authContext";
 import useFetchData from "@/hooks/useFetchData";
-import { TransactionType, WalletType } from "@/types";
+import { TransactionType } from "@/types";
 import { verticalScale } from "@/utils/styling";
 import { useRouter } from "expo-router";
 import { limit, orderBy, where } from "firebase/firestore";
 import { MagnifyingGlassIcon, PlusIcon } from "phosphor-react-native";
-import React, { useMemo } from "react";
+import React from "react";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
 const Home = () => {

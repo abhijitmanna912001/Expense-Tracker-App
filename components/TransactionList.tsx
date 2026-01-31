@@ -1,5 +1,5 @@
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
-import { TransactionListType } from "@/types";
+import { TransactionListType, TransactionType } from "@/types";
 import { verticalScale } from "@/utils/styling";
 import { FlashList } from "@shopify/flash-list";
 import React from "react";
@@ -7,6 +7,8 @@ import { StyleSheet, View } from "react-native";
 import TransactionItem from "./TransactionItem";
 import Typography from "./Typography";
 import Loading from "./Loading";
+import { useRouter } from "expo-router";
+import { Timestamp } from "firebase/firestore";
 
 const TransactionList = ({
   data,
@@ -14,7 +16,24 @@ const TransactionList = ({
   loading,
   emptyListMessage,
 }: TransactionListType) => {
-  const handleClick = () => {};
+  const router = useRouter();
+
+  const handleClick = (item: TransactionType) => {
+    router.push({
+      pathname: "/(modals)/transactionModal",
+      params: {
+        id: item?.id,
+        type: item?.type,
+        amount: item?.amount?.toString(),
+        category: item?.category,
+        date: (item.date as Timestamp)?.toDate()?.toISOString(),
+        description: item?.description,
+        image: item?.image,
+        uid: item?.uid,
+        walletId: item?.walletId,
+      },
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -24,10 +43,14 @@ const TransactionList = ({
         </Typography>
       )}
       <View style={styles.list}>
-        <FlashList
+        <FlashList<TransactionType>
           data={data}
           renderItem={({ item, index }) => (
-            <TransactionItem item={item} index={index} />
+            <TransactionItem
+              item={item}
+              index={index}
+              handleClick={handleClick}
+            />
           )}
           {...({ estimatedItemSize: 60 } as any)}
         />

@@ -9,8 +9,11 @@ import { expenseCategories, transactionTypes } from "@/constants/data";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { useAuth } from "@/contexts/authContext";
 import useFetchData from "@/hooks/useFetchData";
-import { createOrUpdateTransaction } from "@/services/transactionService";
-import { TransactionType, WalletType } from "@/types";
+import {
+  createOrUpdateTransaction,
+  deleteTransaction,
+} from "@/services/transactionService";
+import { paramType, TransactionType, WalletType } from "@/types";
 import { scale, verticalScale } from "@/utils/styling";
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -18,7 +21,7 @@ import DateTimePicker, {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { orderBy, where } from "firebase/firestore";
 import { TrashIcon } from "phosphor-react-native";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Alert,
   Platform,
@@ -39,13 +42,11 @@ const TransactionModal = () => {
       user?.uid
         ? [where("uid", "==", user.uid), orderBy("created", "desc")]
         : [],
-    [user?.uid]
+    [user?.uid],
   );
 
   const {
     data: wallets,
-    loading: walletsLoading,
-    error: walletError,
   } = useFetchData<WalletType>("wallets", constraints);
 
   const [transaction, setTransaction] = useState<TransactionType>({
@@ -61,8 +62,28 @@ const TransactionModal = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const oldTransaction: { name: string; image: string; id: string } =
-    useLocalSearchParams();
+  const oldTransaction: paramType = useLocalSearchParams();
+
+  const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    const currentDate = selectedDate || transaction.date;
+    setTransaction({ ...transaction, date: currentDate });
+    setShowDatePicker(Platform.OS === "ios");
+  };
+
+  useEffect(() => {
+    if (oldTransaction?.id) {
+      setTransaction({
+        type: oldTransaction?.type,
+        amount: Number(oldTransaction?.amount),
+        description: oldTransaction.description || "",
+        category: oldTransaction.category || "",
+        date: new Date(oldTransaction.date),
+        walletId: oldTransaction.walletId,
+        image: oldTransaction.image,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onSubmit = async () => {
     const { type, amount, category, date, walletId, image, description } =
@@ -79,9 +100,11 @@ const TransactionModal = () => {
       category,
       date,
       walletId,
-      image,
+      image: image ?? null,
       uid: user?.uid,
     };
+
+    if (oldTransaction?.id) transactionData.id = oldTransaction.id;
 
     setLoading(true);
     const res = await createOrUpdateTransaction(transactionData);
@@ -98,31 +121,34 @@ const TransactionModal = () => {
     if (!oldTransaction?.id) return;
     setLoading(true);
 
-    const res = await deleteWallet(oldTransaction?.id);
-    setLoading(false);
+    const res = await deleteTransaction(
+      oldTransaction?.id,
+      oldTransaction?.walletId,
+    );
 
-    if (res.success) {
+    setLoading(false);
+    if (res?.success) {
       router.back();
     } else {
-      Alert.alert("Wallet", res.msg);
+      Alert.alert("Transaction", res?.msg);
     }
   };
 
   const showDeleteAlert = () => {
     Alert.alert(
       "Confirm",
-      "Are you sure you want to delete this wallet? \nThis action will delete all transactions related to this wallet",
+      "Are you sure you want to delete this transaction ?",
       [
-        { text: "Cancel", style: "cancel", onPress: () => {} },
-        { text: "Delete", style: "destructive", onPress: () => onDelete() },
-      ]
+        { text: "Cancel", style: "cancel", onPress: () => { } },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => {
+            onDelete();
+          },
+        },
+      ],
     );
-  };
-
-  const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
-    const currentDate = selectedDate || transaction.date;
-    setTransaction({ ...transaction, date: currentDate });
-    setShowDatePicker(Platform.OS === "ios");
   };
 
   return (
