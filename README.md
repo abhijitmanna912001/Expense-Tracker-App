@@ -1,50 +1,46 @@
-# Welcome to your Expo app 👋
+# Expense Tracker App 📊💸
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A full-featured **Expense Tracker mobile application** built using **Expo (React Native)** that helps users manage their income and expenses with real-time insights and clean visual statistics.
 
-## Get started
+---
 
-1. Install dependencies
+## ✨ Features
 
-   ```bash
-   npm install
-   ```
+- 🔐 User Authentication (Firebase Auth)
+- 🔄 Real-time data updates
+- 👤 User Profile management
+- 💼 Wallet management
+- 💸 Income & Expense transactions
+- 📊 Weekly, Monthly & Yearly statistics
+- 📈 Interactive charts
+- 🔍 Search & filter transactions
+- 🌙 Modern & clean UI
+- ☁️ Cloud image upload support
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## 🛠️ Tech Stack
 
-In the output, you'll find options to open the app in a
+- **Frontend:** React Native (Expo)
+- **Backend / Database:** Firebase (Auth + Firestore)
+- **Image Storage:** Cloudinary
+- **Charts:** react-native-gifted-charts
+- **State Management:** React Hooks & Context API
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 🚀 Getting Started
 
-## Get a fresh project
+### Prerequisites
 
-When you're ready, run:
+- Node.js
+- Expo CLI
+- Firebase project setup
+
+### Installation
 
 ```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+git clone https://github.com/abhijitmanna912001/Expense-Tracker-App
+cd expense-tracker
+npm install
+npx expo start
