@@ -1,7 +1,11 @@
 import { firestore } from "@/config/firebase";
 import { colors } from "@/constants/theme";
 import { ResponseType, TransactionType } from "@/types";
-import { getLast12MonthsData, getLast7DaysData } from "@/utils/common";
+import {
+  getLast12MonthsData,
+  getLast7DaysData,
+  getYearsRange,
+} from "@/utils/common";
 import { scale } from "@/utils/styling";
 import {
   collection,
@@ -122,13 +126,79 @@ export const fetchMonthlyStats = async (uid: string): Promise<ResponseType> => {
       {
         value: month.expense,
         frontColor: colors.rose,
-        // spacing: scale(14), // ⬅️ KEY FIX (space AFTER both bars)
       },
     ]);
 
     return { success: true, data: { stats, transactions } };
   } catch (error: any) {
-    console.log("error fetching weekly stats: ", error);
+    console.log("error fetching monthly stats: ", error);
+    return { success: false, msg: error.msg };
+  }
+};
+
+export const fetchYearlyStats = async (uid: string): Promise<ResponseType> => {
+  try {
+    const db = firestore;
+
+    const transactionQuery = query(
+      collection(db, "transactions"),
+      orderBy("date", "desc"),
+      where("uid", "==", uid),
+    );
+
+    const querySnap = await getDocs(transactionQuery);
+    const transactions: TransactionType[] = [];
+
+    const firstTransaction = querySnap.docs.reduce((earliest, doc) => {
+      const transactionDate = doc.data().date.toDate();
+      return Math.min(transactionDate.getTime(), earliest.getTime()) ===
+        transactionDate.getTime()
+        ? transactionDate
+        : earliest;
+    }, new Date());
+
+    const firstYear = firstTransaction.getFullYear();
+    const currentYear = new Date().getFullYear();
+
+    const yearlyData = getYearsRange(firstYear, currentYear);
+
+    querySnap.forEach((doc) => {
+      const transaction = doc.data() as TransactionType;
+      transaction.id = doc.id;
+      transactions.push(transaction);
+
+      const transactionYear = (transaction.date as Timestamp)
+        .toDate()
+        .getFullYear();
+
+      const yearData = yearlyData.find(
+        (item) => item.year === transactionYear.toString(),
+      );
+
+      if (yearData) {
+        if (transaction.type === "income") {
+          yearData.income += transaction.amount;
+        } else if (transaction.type === "expense") {
+          yearData.expense += transaction.amount;
+        }
+      }
+    });
+
+    const stats = yearlyData.flatMap((year) => [
+      {
+        value: year.income,
+        label: year.year,
+        frontColor: colors.primary,
+      },
+      {
+        value: year.expense,
+        frontColor: colors.rose,
+      },
+    ]);
+
+    return { success: true, data: { stats, transactions } };
+  } catch (error: any) {
+    console.log("error fetching yearly stats: ", error);
     return { success: false, msg: error.msg };
   }
 };

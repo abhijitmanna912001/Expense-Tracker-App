@@ -50,3 +50,18 @@ export const getLast12MonthsData = () => {
 
   return result.reverse();
 };
+
+export const getYearsRange = (startYear: number, endYear: number) => {
+  const result = [];
+
+  for (let year = startYear; year <= endYear; year++) {
+    result.push({
+      year: year.toString(),
+      fullDate: `01-01-${year}`,
+      income: 0,
+      expense: 0,
+    });
+  }
+
+  return result.reverse();
+};

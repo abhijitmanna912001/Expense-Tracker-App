@@ -4,7 +4,7 @@ import ScreenWrapper from "@/components/ScreenWrapper";
 import TransactionList from "@/components/TransactionList";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { useAuth } from "@/contexts/authContext";
-import { fetchMonthlyStats, fetchWeeklyStats } from "@/services/statsService";
+import { fetchMonthlyStats, fetchWeeklyStats, fetchYearlyStats } from "@/services/statsService";
 import { scale, verticalScale } from "@/utils/styling";
 import SegmentedControl from "@react-native-segmented-control/segmented-control";
 import React, { useEffect, useState } from "react";
@@ -56,7 +56,18 @@ const Statistics = () => {
     }
   };
 
-  const getYearlyStats = async () => {};
+  const getYearlyStats = async () => {
+    setChartLoading(true);
+    let res = await fetchYearlyStats(user?.uid as string);
+    setChartLoading(false);
+
+    if (res.success) {
+      setChartData(res?.data?.stats);
+      setTransactions(res?.data?.transactions);
+    } else {
+      Alert.alert("Error", res.msg);
+    }
+  };
 
   return (
     <ScreenWrapper>
@@ -92,7 +103,7 @@ const Statistics = () => {
               <BarChart
                 data={chartData}
                 barWidth={scale(12)}
-                spacing={scale(22)}
+                spacing={scale(16)}
                 labelWidth={scale(40)} // ⬅️ IMPORTANT
                 roundedTop
                 roundedBottom
