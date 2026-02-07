@@ -4,7 +4,7 @@ import Typography from "@/components/Typography";
 import { auth } from "@/config/firebase";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { useAuth } from "@/contexts/authContext";
-import { getProfileImage } from "@/services/ImageService"
+import { getProfileImage } from "@/services/ImageService";
 import { accountOptionType } from "@/types";
 import { verticalScale } from "@/utils/styling";
 import { Image } from "expo-image";
@@ -57,7 +57,6 @@ const Profile = () => {
     Alert.alert("Confirm", "Are you sure you want to logout?", [
       {
         text: "Cancel",
-        onPress: () => console.log("Cancel Pressed"),
         style: "cancel",
       },
       {

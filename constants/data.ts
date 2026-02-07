@@ -1,5 +1,19 @@
 import { CategoryType, ExpenseCategoriesType } from "@/types";
-import { CarIcon, CurrencyDollarSimpleIcon, DotsThreeOutlineIcon, FilmStripIcon, ForkKnifeIcon, HeartIcon, HouseIcon, LightbulbIcon, PiggyBankIcon, ShieldCheckIcon, ShoppingCartIcon, TShirtIcon, UserIcon } from "phosphor-react-native";
+import {
+  CarIcon,
+  CurrencyDollarSimpleIcon,
+  DotsThreeOutlineIcon,
+  FilmStripIcon,
+  ForkKnifeIcon,
+  HeartIcon,
+  HouseIcon,
+  LightbulbIcon,
+  PiggyBankIcon,
+  ShieldCheckIcon,
+  ShoppingCartIcon,
+  TShirtIcon,
+  UserIcon,
+} from "phosphor-react-native";
 
 export const expenseCategories: ExpenseCategoriesType = {
   groceries: {
