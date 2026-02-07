@@ -30,7 +30,6 @@ const Wallet = () => {
     constraints
   );
 
-  // ✅ AUTH LOADING UI (AFTER hooks)
   if (!user) {
     return (
       <ScreenWrapper>

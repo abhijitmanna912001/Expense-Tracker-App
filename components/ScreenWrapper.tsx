@@ -5,8 +5,7 @@ import {
   Dimensions,
   Platform,
   StatusBar,
-  StyleSheet,
-  View,
+  View
 } from "react-native";
 
 const { height } = Dimensions.get("window");
@@ -32,4 +31,3 @@ const ScreenWrapper = ({ style, children }: ScreenWrapperProps) => {
 
 export default ScreenWrapper;
 
-const styles = StyleSheet.create({});
