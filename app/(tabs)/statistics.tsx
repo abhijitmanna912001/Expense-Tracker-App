@@ -4,10 +4,14 @@ import ScreenWrapper from "@/components/ScreenWrapper";
 import TransactionList from "@/components/TransactionList";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { useAuth } from "@/contexts/authContext";
-import { fetchMonthlyStats, fetchWeeklyStats, fetchYearlyStats } from "@/services/statsService";
+import {
+  fetchMonthlyStats,
+  fetchWeeklyStats,
+  fetchYearlyStats,
+} from "@/services/statsService";
 import { scale, verticalScale } from "@/utils/styling";
 import SegmentedControl from "@react-native-segmented-control/segmented-control";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
 
@@ -18,56 +22,56 @@ const Statistics = () => {
   const [chartLoading, setChartLoading] = useState(false);
   const [transactions, setTransactions] = useState([]);
 
+  const getWeeklyStats = useCallback(async () => {
+    if (!user?.uid) return;
+
+    setChartLoading(true);
+    const res = await fetchWeeklyStats(user.uid);
+    setChartLoading(false);
+
+    if (res.success) {
+      setChartData(res.data.stats);
+      setTransactions(res.data.transactions);
+    } else {
+      Alert.alert("Error", res.msg);
+    }
+  }, [user?.uid]);
+
+  const getMonthlyStats = useCallback(async () => {
+    if (!user?.uid) return;
+
+    setChartLoading(true);
+    const res = await fetchMonthlyStats(user.uid);
+    setChartLoading(false);
+
+    if (res.success) {
+      setChartData(res.data.stats);
+      setTransactions(res.data.transactions);
+    } else {
+      Alert.alert("Error", res.msg);
+    }
+  }, [user?.uid]);
+
+  const getYearlyStats = useCallback(async () => {
+    if (!user?.uid) return;
+
+    setChartLoading(true);
+    const res = await fetchYearlyStats(user.uid);
+    setChartLoading(false);
+
+    if (res.success) {
+      setChartData(res.data.stats);
+      setTransactions(res.data.transactions);
+    } else {
+      Alert.alert("Error", res.msg);
+    }
+  }, [user?.uid]);
+
   useEffect(() => {
-    if (activeIndex === 0) {
-      getWeeklyStats();
-    }
-    if (activeIndex === 1) {
-      getMonthlyStats();
-    }
-    if (activeIndex === 2) {
-      getYearlyStats();
-    }
-  }, [activeIndex]);
-
-  const getWeeklyStats = async () => {
-    setChartLoading(true);
-    let res = await fetchWeeklyStats(user?.uid as string);
-    setChartLoading(false);
-
-    if (res.success) {
-      setChartData(res?.data?.stats);
-      setTransactions(res?.data?.transactions);
-    } else {
-      Alert.alert("Error", res.msg);
-    }
-  };
-
-  const getMonthlyStats = async () => {
-    setChartLoading(true);
-    let res = await fetchMonthlyStats(user?.uid as string);
-    setChartLoading(false);
-
-    if (res.success) {
-      setChartData(res?.data?.stats);
-      setTransactions(res?.data?.transactions);
-    } else {
-      Alert.alert("Error", res.msg);
-    }
-  };
-
-  const getYearlyStats = async () => {
-    setChartLoading(true);
-    let res = await fetchYearlyStats(user?.uid as string);
-    setChartLoading(false);
-
-    if (res.success) {
-      setChartData(res?.data?.stats);
-      setTransactions(res?.data?.transactions);
-    } else {
-      Alert.alert("Error", res.msg);
-    }
-  };
+    if (activeIndex === 0) getWeeklyStats();
+    if (activeIndex === 1) getMonthlyStats();
+    if (activeIndex === 2) getYearlyStats();
+  }, [activeIndex, getWeeklyStats, getMonthlyStats, getYearlyStats]);
 
   return (
     <ScreenWrapper>
@@ -104,7 +108,7 @@ const Statistics = () => {
                 data={chartData}
                 barWidth={scale(12)}
                 spacing={scale(16)}
-                labelWidth={scale(40)} // ⬅️ IMPORTANT
+                labelWidth={scale(40)}
                 roundedTop
                 roundedBottom
                 hideRules
