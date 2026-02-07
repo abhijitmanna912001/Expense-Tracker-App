@@ -15,6 +15,7 @@ export default {
     },
 
     android: {
+      package: "com.abhi912001.expensetracker",
       edgeToEdgeEnabled: true,
       predictiveBackGestureEnabled: false,
     },
