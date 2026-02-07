@@ -16,7 +16,11 @@ import {
   where,
 } from "firebase/firestore";
 
-export const fetchWeeklyStats = async (uid: string): Promise<ResponseType> => {
+export const fetchWeeklyStats = async (uid?: string): Promise<ResponseType> => {
+  if (!uid) {
+    return { success: true, data: { stats: [], transactions: [] } };
+  }
+
   try {
     const db = firestore;
     const today = new Date();
@@ -74,7 +78,13 @@ export const fetchWeeklyStats = async (uid: string): Promise<ResponseType> => {
   }
 };
 
-export const fetchMonthlyStats = async (uid: string): Promise<ResponseType> => {
+export const fetchMonthlyStats = async (
+  uid?: string,
+): Promise<ResponseType> => {
+  if (!uid) {
+    return { success: true, data: { stats: [], transactions: [] } };
+  }
+
   try {
     const db = firestore;
     const today = new Date();
@@ -136,7 +146,11 @@ export const fetchMonthlyStats = async (uid: string): Promise<ResponseType> => {
   }
 };
 
-export const fetchYearlyStats = async (uid: string): Promise<ResponseType> => {
+export const fetchYearlyStats = async (uid?: string): Promise<ResponseType> => {
+  if (!uid) {
+    return { success: true, data: { stats: [], transactions: [] } };
+  }
+  
   try {
     const db = firestore;
 

@@ -51,6 +51,7 @@ const Profile = () => {
 
   const handleLogout = async () => {
     await signOut(auth);
+    router.replace("/(auth)/login");
   };
 
   const showLogoutAlert = () => {

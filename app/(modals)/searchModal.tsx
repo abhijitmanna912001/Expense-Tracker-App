@@ -8,14 +8,18 @@ import { useAuth } from "@/contexts/authContext";
 import useFetchData from "@/hooks/useFetchData";
 import { TransactionType } from "@/types";
 import { orderBy, where } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 const SearchModal = () => {
   const { user } = useAuth();
   const [search, setSearch] = useState("");
 
-  const constraints = [where("uid", "==", user?.uid), orderBy("date", "desc")];
+  const constraints = useMemo(
+    () =>
+      user?.uid ? [where("uid", "==", user.uid), orderBy("date", "desc")] : [],
+    [user?.uid],
+  );
 
   const { data: allTransactions, loading: transactionsLoading } =
     useFetchData<TransactionType>("transactions", constraints);
