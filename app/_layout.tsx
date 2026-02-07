@@ -17,6 +17,10 @@ export default function RootLayout() {
           name="(modals)/transactionModal"
           options={{ presentation: "modal" }}
         />
+        <Stack.Screen
+          name="(modals)/searchModal"
+          options={{ presentation: "modal" }}
+        />
       </Stack>
     </AuthProvider>
   );

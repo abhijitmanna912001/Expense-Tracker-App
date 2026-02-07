@@ -16,7 +16,7 @@ import React, { useEffect, useState } from "react";
 import { Alert, ScrollView, StyleSheet, View } from "react-native";
 
 const WalletModal = () => {
-  const { user, updateUserData } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
 
   const [wallet, setWallet] = useState<WalletType>({
