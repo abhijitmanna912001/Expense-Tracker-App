@@ -96,4 +96,4 @@ Any changes will be posted on this page with an updated revision date.
 
 If you have any questions or concerns about this Privacy Policy or your data, please contact us at:
 
-📧 **Email:** <abhi912001@gmail.com>
+📧 **Email:** <abhijitmanna912001@gmail.com>
