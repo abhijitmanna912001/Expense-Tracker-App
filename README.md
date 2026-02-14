@@ -50,3 +50,24 @@ npx expo start
 
 You can read our Privacy Policy here:  
 [Privacy Policy](https://abhijitmanna912001.github.io/Expense-Tracker-App/privacy-policy)
+
+## 🧪 Google Play Closed Testing
+
+This app is currently in **Google Play Closed Testing**.
+
+Due to Google Play policies, the app is **not publicly downloadable yet**.  
+Only users whose **Google account email is added as a tester** can install the app from the Play Store.
+
+### Want to help test the app?
+
+If you’d like to participate in closed testing:
+
+1. Email me your **Google account email (Gmail preferred)**
+2. I’ll add you to the tester list
+3. You’ll receive access to install the app from Google Play
+4. Please keep the app installed for **at least 14 days** (no daily usage required)
+
+📩 **Contact:** `abhijitmanna912001@gmail.com`
+
+Thank you for helping me test and improve the app 🙌  
+Public release will be available after the closed testing phase is complete.
