@@ -44,3 +44,9 @@ git clone https://github.com/abhijitmanna912001/Expense-Tracker-App
 cd expense-tracker
 npm install
 npx expo start
+```
+
+## Privacy Policy
+
+You can read our Privacy Policy here:  
+[Privacy Policy](https://abhijitmanna912001.github.io/Expense-Tracker-App/privacy-policy)
